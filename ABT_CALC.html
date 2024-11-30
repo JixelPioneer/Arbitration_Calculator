@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbitration Court Fee Calculator</title>
+    <style>
+        body {
+            font-family: "Times New Roman", Times, serif;
+            margin: 20px auto;
+            max-width: 900px;
+            color: #333;
+            background: linear-gradient(to bottom, #FF9933, white, #138808); /* Indian flag colors */
+        }
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            color: #0056b3;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px #555;
+        }
+        .container {
+            margin-bottom: 30px;
+        }
+        label {
+            font-weight: bold;
+            font-size: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        .btn-group button {
+            padding: 15px 25px;
+            margin-right: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #FF9933; /* Saffron */
+            color: white;
+        }
+        .btn-group button:hover {
+            background-color: #FF7700; /* Darker saffron */
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #d4edda;
+            border: 2px solid #c3e6cb;
+            font-weight: bold;
+            font-size: 22px;
+        }
+        #breakdown {
+            margin-top: 15px;
+            background-color: #e9ecef;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        #sharedLink {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 18px;
+            color: white; /* Changed to white for better contrast */
+            background-color: #333; /* Added subtle contrast for footer */
+            padding: 10px;
+            border-radius: 8px;
+        }
+        footer span {
+            color: #ffffff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Title -->
+    <h1>Arbitration Court Fee Calculator</h1>
+
+    <!-- Input Section -->
+    <div class="container">
+        <label for="disputeAmount">Enter Dispute Amount (in ₹):</label>
+        <input type="number" id="disputeAmount" placeholder="Enter amount" required>
+    </div>
+    <div class="container">
+        <label>Select Arbitrator Type:</label>
+        <div class="btn-group">
+            <button onclick="calculateFee('sole')">Sole Arbitrator</button>
+            <button onclick="calculateFee('panel')">Panel of Arbitrators</button>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div id="result"></div>
+    <div id="breakdown"></div>
+
+    <!-- Shared Link -->
+    <div id="sharedLink">
+        Link to Access: <span id="linkPlaceholder">[Provide Your Hosted Link Here]</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Tailored for <span>Adv. Dr. Anil Kathuria Supreme Court</span> &amp; Crafted by <span>JT006</span>
+    </footer>
+
+    <script>
+        function calculateFee(arbitratorType) {
+            const disputeAmount = parseFloat(document.getElementById('disputeAmount').value);
+
+            if (isNaN(disputeAmount) || disputeAmount <= 0) {
+                alert("Please enter a valid dispute amount.");
+                return;
+            }
+
+            let fee = 0;
+            let breakdown = "";
+
+            if (disputeAmount <= 500000) {
+                fee = 45000;
+                breakdown = "Base fee: ₹45,000 (dispute ≤ ₹5,00,000)";
+            } else if (disputeAmount <= 2000000) {
+                fee = 45000 + 0.035 * (disputeAmount - 500000);
+                breakdown = `₹45,000 + 3.5% of ₹${(disputeAmount - 500000).toLocaleString('en-IN')}`;
+            } else if (disputeAmount <= 10000000) {
+                fee = 97500 + 0.03 * (disputeAmount - 2000000);
+                breakdown = `₹97,500 + 3% of ₹${(disputeAmount - 2000000).toLocaleString('en-IN')}`;
+            } else if (disputeAmount <= 100000000) {
+                fee = 337500 + 0.01 * (disputeAmount - 10000000);
+                breakdown = `₹3,37,500 + 1% of ₹${(disputeAmount - 10000000).toLocaleString('en-IN')}`;
+            } else {
+                fee = 1987500 + 0.005 * (disputeAmount - 200000000);
+                fee = Math.min(fee, 3000000);
+                breakdown = `₹19,87,500 + 0.5% of ₹${(disputeAmount - 200000000).toLocaleString('en-IN')} (capped at ₹30,00,000)`;
+            }
+
+            if (arbitratorType === 'sole') {
+                fee += fee * 0.25;
+                breakdown += " + 25% for Sole Arbitrator";
+            }
+
+            document.getElementById('result').textContent = `Total Fee: ₹${fee.toLocaleString('en-IN')}`;
+            document.getElementById('breakdown').textContent = `Calculation Pathway: ${breakdown}`;
+        }
+    </script>
+</body>
+</html>
